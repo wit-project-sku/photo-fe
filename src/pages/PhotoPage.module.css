@@ -1,0 +1,112 @@
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  color: white;
+  text-align: center;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.photo {
+  width: 90%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  padding-top: 10px;
+}
+
+.buttonArea {
+  display: flex;
+  gap: 12px;
+  margin: 16px;
+}
+
+button {
+  flex: 1;
+  border: none;
+  padding: 14px 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: clamp(14px, 3.5vw, 16px);
+}
+
+.saveBtn {
+  background-color: #e4003a;
+  color: white;
+}
+
+.goodsBtn {
+  background-color: #a57444;
+  color: white;
+}
+
+button span {
+  display: block;
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.description {
+  font-size: clamp(11px, 3vw, 13px);
+  text-align: left;
+  margin: 16px;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: 12px;
+  padding-bottom: 12px;
+  color: hotpink;
+  font-weight: bold;
+  font-size: clamp(12px, 3.2vw, 14px);
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.logo {
+  width: 28px;
+  height: auto;
+}
+
+.website {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #dcdcdc;
+  font-weight: 400;
+}
+
+/* 작은 휴대폰 대응 */
+@media (max-width: 360px) {
+  .buttonArea {
+    flex-direction: column;
+  }
+}
+
+/* 태블릿 및 키오스크 큰 화면 */
+@media (min-width: 768px) {
+  .container {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+}
