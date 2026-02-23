@@ -20,7 +20,13 @@ function PhotoPage() {
         console.warn('decode 실패, 원본 URL 사용', e);
       }
 
-      urlFromQuery = urlFromQuery.replace('http://168.107.45.229:8080', '/images');
+      // Netlify HTTPS proxy 경로로 변환
+      if (urlFromQuery.startsWith('http://168.107.45.229:8080')) {
+        const path = urlFromQuery.replace('http://168.107.45.229:8080', '');
+        urlFromQuery = `/images${path}`;
+      }
+
+      console.log('converted imageUrl:', urlFromQuery);
 
       // 🔥 localStorage 저장
       localStorage.setItem('imageUrl', urlFromQuery);
@@ -82,7 +88,14 @@ function PhotoPage() {
 
   return (
     <div className={styles.container}>
-      {imageUrl && <img src={imageUrl} className={styles.photo} />}
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt='photo'
+          className={styles.photo}
+          onError={(e) => console.error('이미지 로드 실패:', e.target.src)}
+        />
+      )}
 
       <div className={styles.buttonArea}>
         <button className={styles.saveBtn} onClick={handleSavePhoto}>
