@@ -7,36 +7,35 @@ function PhotoPage() {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    let urlFromQuery = params.get('imageUrl');
+    const initImage = async () => {
+      const params = new URLSearchParams(window.location.search);
+      let urlFromQuery = params.get('imageUrl');
 
-    // 1️⃣ URL로 전달된 imageUrl이 있으면
-    if (urlFromQuery) {
-      try {
-        urlFromQuery = decodeURIComponent(urlFromQuery);
-      } catch (e) {
-        console.warn('decode 실패, 원본 URL 사용', e);
+      // 1️⃣ URL query 우선 사용
+      if (urlFromQuery) {
+        try {
+          urlFromQuery = decodeURIComponent(urlFromQuery);
+        } catch (e) {
+          console.warn('decode 실패, 원본 URL 사용', e);
+        }
+
+        localStorage.setItem('imageUrl', urlFromQuery);
+
+        // 주소창 query 제거
+        window.history.replaceState({}, '', window.location.pathname);
+
+        setImageUrl(urlFromQuery);
+        return;
       }
 
-      // 🔥 localStorage 저장
-      localStorage.setItem('imageUrl', urlFromQuery);
-      setImageUrl(urlFromQuery);
+      // 2️⃣ localStorage fallback
+      const storedImage = localStorage.getItem('imageUrl');
+      if (storedImage) {
+        setImageUrl(storedImage);
+        return;
+      }
 
-      // 🔥 URL에서 query 제거 (주소창 깨끗하게)
-      window.history.replaceState({}, '', window.location.pathname);
-      return;
-    }
-
-    // 2️⃣ localStorage에 저장된 값 사용
-    const storedImage = localStorage.getItem('imageUrl');
-    if (storedImage) {
-      console.log('load image from localStorage');
-      setImageUrl(storedImage);
-      return;
-    }
-
-    // 3️⃣ fallback: API 호출
-    const fetchImages = async () => {
+      // 3️⃣ API fallback
       try {
         const data = await getImages();
         setImageUrl(data.data[0].imageUrl);
@@ -45,7 +44,7 @@ function PhotoPage() {
       }
     };
 
-    fetchImages();
+    initImage();
   }, []);
 
   const handleSavePhoto = async () => {

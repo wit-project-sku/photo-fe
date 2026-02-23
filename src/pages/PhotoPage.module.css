@@ -12,6 +12,7 @@
   padding-bottom: env(safe-area-inset-bottom);
   overflow-y: auto;
   scrollbar-width: none; /* Firefox */
+  align-items: center;
 }
 
 .container::-webkit-scrollbar {
@@ -19,14 +20,14 @@
 }
 
 .photo {
-  width: 90%;
-  max-width: 100%;
+  width: auto;
   height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
   display: block;
   margin: 0 auto;
-  padding-top: 10px;
+  padding-top: 30px;
 }
 
 .buttonArea {
