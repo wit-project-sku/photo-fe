@@ -20,7 +20,7 @@ function PhotoPage() {
         console.warn('decode 실패, 원본 URL 사용', e);
       }
 
-      console.log('decoded imageUrl:', urlFromQuery);
+      urlFromQuery = urlFromQuery.replace('http://168.107.45.229:8080', '/images');
 
       // 🔥 localStorage 저장
       localStorage.setItem('imageUrl', urlFromQuery);
@@ -52,13 +52,32 @@ function PhotoPage() {
     fetchImages();
   }, []);
 
-  const handleSavePhoto = () => {
+  const handleSavePhoto = async () => {
     if (!imageUrl) return;
 
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'photo.png';
-    link.click();
+    try {
+      // 모바일 Safari/Chrome 대응 다운로드 방식
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'photo.png';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('사진 저장 실패:', err);
+      // fallback: 새 탭으로 열기 (사용자가 직접 저장 가능)
+      window.open(imageUrl, '_blank');
+    }
+  };
+
+  const handleCreateGoods = () => {
+    window.open('https://www.insarang.kr/', '_blank');
   };
 
   return (
@@ -71,7 +90,7 @@ function PhotoPage() {
           <span>&lt;SAVE PHOTO&gt;</span>
         </button>
 
-        <button className={styles.goodsBtn}>
+        <button className={styles.goodsBtn} onClick={handleCreateGoods}>
           굿즈 만들기
           <span>&lt;WITH GOODS&gt;</span>
         </button>

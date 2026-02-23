@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/images/*"
+  to = "http://168.107.45.229:8080/:splat"
+  status = 200
+  force = true
