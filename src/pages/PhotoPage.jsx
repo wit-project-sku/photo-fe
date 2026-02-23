@@ -10,8 +10,6 @@ function PhotoPage() {
     const params = new URLSearchParams(window.location.search);
     let urlFromQuery = params.get('imageUrl');
 
-    console.log('raw query imageUrl:', urlFromQuery);
-
     // 1️⃣ URL로 전달된 imageUrl이 있으면
     if (urlFromQuery) {
       try {
@@ -19,14 +17,6 @@ function PhotoPage() {
       } catch (e) {
         console.warn('decode 실패, 원본 URL 사용', e);
       }
-
-      // Netlify HTTPS proxy 경로로 변환
-      if (urlFromQuery.startsWith('http://168.107.45.229:8080')) {
-        const path = urlFromQuery.replace('http://168.107.45.229:8080', '');
-        urlFromQuery = `/images${path}`;
-      }
-
-      console.log('converted imageUrl:', urlFromQuery);
 
       // 🔥 localStorage 저장
       localStorage.setItem('imageUrl', urlFromQuery);
@@ -88,14 +78,7 @@ function PhotoPage() {
 
   return (
     <div className={styles.container}>
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt='photo'
-          className={styles.photo}
-          onError={(e) => console.error('이미지 로드 실패:', e.target.src)}
-        />
-      )}
+      {imageUrl && <img src={imageUrl} className={styles.photo} />}
 
       <div className={styles.buttonArea}>
         <button className={styles.saveBtn} onClick={handleSavePhoto}>
