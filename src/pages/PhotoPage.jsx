@@ -5,10 +5,24 @@ import logo from '@assets/images/logo.png';
 
 function PhotoPage() {
   const [imageUrl, setImageUrl] = useState(null);
+  const [isGoods, setIsGoods] = useState(true);
 
   useEffect(() => {
     const initImage = async () => {
       const params = new URLSearchParams(window.location.search);
+
+      // isGoods 처리 (URL → localStorage 저장)
+      const goodsParam = params.get('isGoods');
+      if (goodsParam) {
+        localStorage.setItem('isGoods', goodsParam);
+        setIsGoods(goodsParam === 'Y');
+      } else {
+        const storedGoods = localStorage.getItem('isGoods');
+        if (storedGoods) {
+          setIsGoods(storedGoods === 'Y');
+        }
+      }
+
       let urlFromQuery = params.get('imageUrl');
 
       // 1️⃣ URL query 우선 사용
@@ -81,21 +95,26 @@ function PhotoPage() {
 
       <div className={styles.buttonArea}>
         <button className={styles.saveBtn} onClick={handleSavePhoto}>
-          사진 저장하기
-          <span>&lt;SAVE PHOTO&gt;</span>
+          사진저장하기
+          <span>(SAVE PHOTO)</span>
         </button>
 
-        <button className={styles.goodsBtn} onClick={handleCreateGoods}>
-          굿즈 만들기
-          <span>&lt;WITH GOODS&gt;</span>
-        </button>
+        {isGoods && (
+          <button className={styles.goodsBtn} onClick={handleCreateGoods}>
+            굿즈 만들기
+            <span>(WITH GOODS)</span>
+          </button>
+        )}
       </div>
 
       <div className={styles.description}>
-        <p>• 사진 저장하기 버튼을 먼저 눌러서 사진을 핸드폰에 저장하세요</p>
-        <p>• 굿즈만들기 버튼을 누르시면 저장된 사진으로 굿즈를 만들 수 있어요</p>
         <p>• Save your photo to your phone first by tapping 'Save Photo'.</p>
-        <p>• Then, tap 'Create Goods' to start making your own merch!</p>
+
+        {isGoods && <p>• Then, tap 'Create Goods' to start making your own merch!</p>}
+
+        <p>• 사진 저장하기 버튼을 먼저 눌러서 사진을 핸드폰에 저장하세요</p>
+
+        {isGoods && <p>• 굿즈만들기 버튼을 누르시면 저장된 사진으로 굿즈를 만들 수 있어요</p>}
       </div>
 
       <div className={styles.footer}>
